@@ -17,7 +17,16 @@ layer4.src = "img/layer-4.png";
 const layer5 = new Image();
 layer5.src = "img/layer-5.png";
 
-let frameSpeed = 5; //can be dynamically controlled by the user
+let frameSpeed = 10; //can be dynamically controlled by the user
+
+const slider = document.getElementById("slider");
+const animationSpeed = document.getElementById("animationSpeed");
+slider.value = frameSpeed;
+animationSpeed.innerHTML = frameSpeed;
+slider.addEventListener("change", function (e) {
+  frameSpeed = e.target.value;
+  animationSpeed.innerHTML = frameSpeed;
+});
 
 class Layer {
   //fixedSpeed is used on top of frameSpeed to globally control speed of all layers at once using only one variable(frameSpeed)
@@ -33,7 +42,7 @@ class Layer {
   }
 
   resetFrame() {
-    // this.gameSpeed = frameSpeed * this.fixedSpeed;
+    this.gameSpeed = frameSpeed * this.fixedSpeed;
     //when image crosses -2400px limit
     if (this.x <= -this.width) {
       this.x = this.width + this.x2 - frameSpeed;
@@ -71,4 +80,5 @@ function animate() {
   });
   requestAnimationFrame(animate);
 }
+
 animate();
