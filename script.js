@@ -19,66 +19,69 @@ layer5.src = "img/layer-5.png";
 
 let frameSpeed = 10; //can be dynamically controlled by the user
 
-const slider = document.getElementById("slider");
-const animationSpeed = document.getElementById("animationSpeed");
-slider.value = frameSpeed;
-animationSpeed.innerHTML = frameSpeed;
-slider.addEventListener("change", function (e) {
-  frameSpeed = e.target.value;
+//all assets are loaded before running the animation
+window.addEventListener("load", function () {
+  const slider = document.getElementById("slider");
+  const animationSpeed = document.getElementById("animationSpeed");
+  slider.value = frameSpeed;
   animationSpeed.innerHTML = frameSpeed;
-});
-
-class Layer {
-  //fixedSpeed is used on top of frameSpeed to globally control speed of all layers at once using only one variable(frameSpeed)
-  constructor(image, fixedSpeed) {
-    this.image = image;
-    this.fixedSpeed = fixedSpeed;
-    this.width = 2400;
-    this.height = 700;
-    this.x = 0;
-    this.x2 = this.width; //image is duplicated to simulate the illusion of continuos side-scroll, since there is a gap of 2400px when image is reseted in method below
-    this.y = 0;
-    this.gameSpeed = frameSpeed * this.fixedSpeed;
-  }
-
-  resetFrame() {
-    this.gameSpeed = frameSpeed * this.fixedSpeed;
-    //when image crosses -2400px limit
-    if (this.x <= -this.width) {
-      this.x = this.width + this.x2 - frameSpeed;
-      //can use any other logic/algo
-      //that eliminates the gap between the two images
-      //gap is formed because of frameSpeed(px) implementation of the two images
-    }
-    if (this.x2 <= -this.width) {
-      this.x2 = this.width + this.x - frameSpeed;
-    }
-    //when image hasn't crossed -2400px limit
-    this.x = Math.floor(this.x - this.gameSpeed);
-    this.x2 = Math.floor(this.x2 - this.gameSpeed);
-  }
-
-  draw() {
-    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
-  }
-}
-
-const layerImg1 = new Layer(layer1, 0.2);
-const layerImg2 = new Layer(layer2, 0.4);
-const layerImg3 = new Layer(layer3, 0.6);
-const layerImg4 = new Layer(layer4, 0.8);
-const layerImg5 = new Layer(layer5, 1);
-
-const layers = [layerImg1, layerImg2, layerImg3, layerImg4, layerImg5];
-
-function animate() {
-  ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  layers.forEach((layerObject) => {
-    layerObject.resetFrame();
-    layerObject.draw();
+  slider.addEventListener("change", function (e) {
+    frameSpeed = e.target.value;
+    animationSpeed.innerHTML = frameSpeed;
   });
-  requestAnimationFrame(animate);
-}
 
-animate();
+  class Layer {
+    //fixedSpeed is used on top of frameSpeed to globally control speed of all layers at once using only one variable(frameSpeed)
+    constructor(image, fixedSpeed) {
+      this.image = image;
+      this.fixedSpeed = fixedSpeed;
+      this.width = 2400;
+      this.height = 700;
+      this.x = 0;
+      this.x2 = this.width; //image is duplicated to simulate the illusion of continuos side-scroll, since there is a gap of 2400px when image is reseted in method below
+      this.y = 0;
+      this.gameSpeed = frameSpeed * this.fixedSpeed;
+    }
+
+    resetFrame() {
+      this.gameSpeed = frameSpeed * this.fixedSpeed;
+      //when image crosses -2400px limit
+      if (this.x <= -this.width) {
+        this.x = this.width + this.x2 - frameSpeed;
+        //can use any other logic/algo
+        //that eliminates the gap between the two images
+        //gap is formed because of frameSpeed(px) implementation of the two images
+      }
+      if (this.x2 <= -this.width) {
+        this.x2 = this.width + this.x - frameSpeed;
+      }
+      //when image hasn't crossed -2400px limit
+      this.x = Math.floor(this.x - this.gameSpeed);
+      this.x2 = Math.floor(this.x2 - this.gameSpeed);
+    }
+
+    draw() {
+      ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+      ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+    }
+  }
+
+  const layerImg1 = new Layer(layer1, 0.2);
+  const layerImg2 = new Layer(layer2, 0.4);
+  const layerImg3 = new Layer(layer3, 0.6);
+  const layerImg4 = new Layer(layer4, 0.8);
+  const layerImg5 = new Layer(layer5, 1);
+
+  const layers = [layerImg1, layerImg2, layerImg3, layerImg4, layerImg5];
+
+  function animate() {
+    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    layers.forEach((layerObject) => {
+      layerObject.resetFrame();
+      layerObject.draw();
+    });
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+});
